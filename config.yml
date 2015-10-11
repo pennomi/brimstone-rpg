@@ -5,11 +5,10 @@
 #dpi: 72
 
 antialias: best
-#antialias: default # set the anti-aliasing algorithm. default defers to the underlying graphics device. See http://www.cairographics.org/manual/cairo-cairo-t.html#cairo-antialias-t
 
 # Text hints are used to show the boundaries of text boxes.
 # Can be enabled/disabled at the command-level, or set globally with `set`
-#text_hint: '#F00'
+#text_hint: '#0FF'
 
 # Show progress bars on the command line for potentially long-running operations
 progress_bars: true
@@ -23,7 +22,6 @@ img_dir: images
 
 # Use a SVG cairo back end, instead of an in-memory buffer
 # backend: :memory # default
-# backend: :svg    # can create scalable pdfs, but rendering done at the printer level is not as good as Cairo.
 
 # Configure what text markup uses replace characters
 # Below are the defaults

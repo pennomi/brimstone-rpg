@@ -1,48 +1,61 @@
 Title:
-  extends: title # from hand.yml
-  font: Ubuntu 48
-  color: '#F3EFE3'
-  align: center
-  spacing: -15
-
-Art:
-  extends: art
-
-Description:
-  extends: description # from hand.yml
-  font: Sans 36
-  color: '#F3EFE3'
-  align: center
+  extends: title
+  font: UbuntuCondensed Bold 27
+  color: '#FFFFFF'
+  align: left
   markup: true
 
-Snark:
-  extends: snark # from hand.yml
-  font: Sans italic 18
+Subtitle:
+  extends: subtitle
+  font: UbuntuCondensed Italic 18
+  color: '#FFFFFF'
+  align: left
+  markup: true
+
+Target:
+  extends: target
+  font: RobotoCondensed Light 22
+  color: '#000000'
+  align: left
+  markup: true
+  spacing: -5
+
+Warmup:
+  extends: left_statbox
+  x: += 5
+  font: Ubuntu Bold 26
+  color: '#FFFFFF'
+  align: left
+
+Cooldown:
+  extends: left_statbox
+  x: -= 5
+  font: Ubuntu Bold 26
+  color: '#FFFFFF'
+  align: right
+
+Damage:
+  extends: right_statbox
+  font: Ubuntu Bold 26
+  color: '#FFFFFF'
   align: center
-  valign: middle
-  color: '#F3EFE3'
+  ellipsize: false
 
-Attack:
-  extends: bonus1 # from hand.yml
-  font: ChunkFive Roman,Sans 48
-  color: '#F3EFE3'
-  y: += 70
-AttackIcon:
-  extends: bonus1 # from hand.yml
-  x: += 40
-  width: -= 40
-  height: -= 40
+Copyright:
+  extends: copyright
+  font: RobotoCondensed weight=300 Italic 14
+  color: '#00000088'
+  align: left
+  ellipsize: false
+  spacing: -5
 
-Defend:
-  extends: Attack
-  y: += 200
-DefendIcon:
-  extends: AttackIcon
-  y: += 200
+Description:
+  extends: description
+  font: RobotoCondensed Light 22
+  color: '#000000'
+  align: left
+  markup: true
+  spacing: -5
 
-Health:
-  extends: Defend
-  y: += 200
-HealthIcon:
-  extends: DefendIcon
-  y: += 200
+Icon:
+  extends: icon

@@ -1,0 +1,73 @@
+# Based on TheGameCrafter.com's Poker Card, which is 825x1125
+
+# Our game-specific bounding boxes
+title:
+  x: 223
+  y: 90
+  width: 430
+  height: 40
+
+subtitle:
+  extends: title
+  y: += 40
+  height: 26
+
+target:
+  x: 275
+  y: 210
+  width: 450
+  height: 80
+
+description:
+  x: 100
+  y: 320
+  width: 625
+  height: 750
+
+left_statbox:
+  x: 75
+  y: 1010
+  width: 110
+  height: 40
+
+right_statbox:
+  x: 640
+  y: 1010
+  width: 110
+  height: 40
+
+icon:
+  x: 675
+  y: 80
+  width: 70
+  height: 70
+
+
+copyright:
+  x: 347
+  y: 1001
+  width: 263
+  height: 52
+
+# The full card
+card:
+  x: 0
+  y: 0
+  width: 825
+  height: 1125
+
+# The "cut line", without rounded corners
+cut:
+  x: 37.5
+  y: 37.5
+  width: 750
+  height: 1050
+  radius: 16
+
+# The "safe zone" as defined by TheGameCrafter poker cards
+safe:
+  x: 75
+  y: 75
+  width: 675
+  height: 975
+  dash: 3 3
