@@ -1,8 +1,13 @@
 require 'squib'
 
-Squib::Deck.new(cards: 4, layout: ['portrait.yml', 'layout.yml']) do
-    # Load the spreadsheet
-    deck = xlsx file: 'abilities.xlsx'
+Squib::Deck.new(cards: 5, layout: ['portrait.yml', 'layout.yml']) do
+    # Load the spreadsheets
+    items = xlsx file: 'items.xlsx'
+    abilities = xlsx file: 'abilities.xlsx'
+    bonuses = xlsx file: 'bonuses.xlsx'
+
+    # TODO: Merge them all together or something
+    deck = items
 
     # Set up the background and icon
     svg file: deck['Frame']
@@ -31,7 +36,7 @@ Squib::Deck.new(cards: 4, layout: ['portrait.yml', 'layout.yml']) do
     ['Title', 'Subtitle', 'Target', 'Description'].each do |key|
         # Allow special markup for tags using Pango
         deck[key] = deck[key].map { |s|
-            s = s.gsub(/\[/, '<span background="#212121" foreground="#FFFFFF"> ')
+            s = s.gsub(/\[/, '<span font_size="12" background="#212121" foreground="#FFFFFF"> ')
             .gsub(/]/, ' </span>')
             '<span gravity="south">' + s + '</span>'
         }
@@ -48,7 +53,7 @@ Squib::Deck.new(cards: 4, layout: ['portrait.yml', 'layout.yml']) do
     end
 
     # Configure the copyright/version text
-    deck['CopyrightText'] = (1..deck['Author'].length-1).map { |i|
+    deck['CopyrightText'] = (0..deck['Author'].length-1).map { |i|
         "Author: " + deck['Author'][i] + "\n© " +
         deck['Creation Year'][i].to_i.to_s + " and licensed under cc-by-sa"
     }
@@ -69,3 +74,6 @@ end
 # TODO: Passives
 #Squib::Deck.new(cards: 4, layout: ['landscape.yml', 'landscape.yml']) do
 #end
+
+
+# TODO: Card Back
