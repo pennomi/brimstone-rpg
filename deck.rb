@@ -36,7 +36,7 @@ Squib::Deck.new(cards: 5, layout: ['portrait.yml', 'layout.yml']) do
     ['Title', 'Subtitle', 'Target', 'Description'].each do |key|
         # Allow special markup for tags using Pango
         deck[key] = deck[key].map { |s|
-            s = s.gsub(/\[/, '<span font_size="12" background="#212121" foreground="#FFFFFF"> ')
+            s = s.gsub(/\[/, '<span font="UbuntuCondensed Normal 16" rise="3000" background="#212121" foreground="#FFFFFF"> ')
             .gsub(/]/, ' </span>')
             '<span gravity="south">' + s + '</span>'
         }
