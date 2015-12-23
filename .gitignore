@@ -5,3 +5,5 @@ _output/*.pdf
 .idea/
 .~lock*
 concepts/
+credentials.json
+*.pyc

@@ -1,0 +1,8 @@
+Card types we'll need:
+ * Magic Items (gold)
+ * Mundane Items (gray)
+ * Artifact Items (???)
+ * Basic Abilities (brown)
+ * Combat Abilities (muted red?)
+ * Non-Combat Abilities (steely blue?)
+ * Creatures (swampy green)
