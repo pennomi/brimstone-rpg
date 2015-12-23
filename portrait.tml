@@ -1,0 +1,153 @@
+# Set up the background and icon
+Svg {
+    id: background
+    file: {{ card.background }}
+    x: 0
+    y: 0
+    w: 825
+    h: 1125
+}
+
+Svg {
+    id: icon
+    file: {{ card.icon }}
+    x: 675
+    y: 80
+    w: 70
+    h: 70
+}
+
+{% for tag in card.tags %}
+    Rect {
+        color: .13, .13, .13, 1
+        x: 0
+        y: {{ 85 + loop.index0 * 40 }}
+        w: 195
+        h: 30
+    }
+    Text {
+        text: {{ tag }}
+        x: 75
+        y: {{ 85 + loop.index0 * 40 }}
+        w: 195
+        h: 30
+        color: 1.0, 1.0, 1.0, 1
+        font_name: UbuntuCondensed Normal
+        font_size: 16
+    }
+{% endfor %}
+
+
+# Render fancy text
+Text {
+    id: title
+    text: {{ card.title }}
+    x: 223
+    y: 90
+    w: 430
+    h: 40
+    font_name: UbuntuCondensed Bold
+    font_size: 27
+}
+
+Text {
+    id: subtitle
+    text: {{ card.subtitle }}
+    x: 223
+    y: 130
+    w: 430
+    h: 26
+    font_name: UbuntuCondensed Italic
+    font_size: 18
+}
+
+Text {
+    text: {{ card.target }}
+    x: 275
+    y: 210
+    w: 450
+    h: 80
+    font_name: RobotoCondensed Light
+    font_size: 22
+}
+Text {
+    text: {{ card.description }}
+    x: 100
+    y: 320
+    w: 625
+    h: 750
+    font_name: RobotoCondensed Light
+    font_size: 22
+}
+
+# Render stats
+Text {
+    text: {{ card.warmup }}
+    x: 80
+    y: 1010
+    w: 40
+    h: 40
+    color: 1, 1, 1, 1
+    font_name: Ubuntu Bold
+    font_size: 26
+}
+Text {
+    text: {{ card.cooldown }}
+    x: 144
+    y: 1010
+    w: 40
+    h: 40
+    color: 1, 1, 1, 1
+    font_name: Ubuntu Bold
+    font_size: 26
+    #align: right
+}
+Text {
+    text: {{ card.damage }}
+    x: 640
+    y: 1010
+    w: 110
+    h: 40
+    color: 1, 1, 1, 1
+    font_name: Ubuntu Bold
+    font_size: 26
+}
+
+# Configure the copyright/version text
+Text {
+    text: Author: {{ card.author }}\n© {{ card.creation_year }} and licensed under cc-by-sa
+    x: 347
+    y: 1001
+    w: 263
+    h: 52
+    font_name: RobotoCondensed weight=300 Italic
+    font_size: 14
+    color: 0, 0, 0, .5
+    # line_spacing: -5 TODO: Line spacing
+}
+
+# Debug Drawing
+
+# The "cut line"
+Rect {
+    id: cut
+    x: 37.5
+    y: 37.5
+    w: 750
+    h: 1050
+    radius: 16
+    color: 1, 0, 0, 1
+    stroke: true
+}
+
+# The "safe zone" as defined by TheGameCrafter poker cards
+Rect {
+    id: safe
+    x: 75
+    y: 75
+    w: 675
+    h: 975
+    dash: 3 3
+    color: 1, 1, 0, 1
+    stroke: true
+}
