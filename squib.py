@@ -115,13 +115,13 @@ class RenderInstance:
         pass
 
     def save(self):
-        self.surface.write_to_png("card{}.png".format(self.index))
+        self.surface.write_to_png("_output/card{}.png".format(self.index))
 
 
 def main():
     print("Test commencing.")
     # Load the data from Google Sheets
-    wks = get_worksheet_data("Brimstone RPG Abilities")
+    wks = get_worksheet_data("Brimstone RPG Powers")
     keys = wks[0]
     card_data = [dict(zip(keys, line)) for line in wks[1:]]
 
