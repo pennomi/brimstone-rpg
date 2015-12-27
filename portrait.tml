@@ -37,7 +37,6 @@ Svg {
     }
 {% endfor %}
 
-
 # Render fancy text
 Text {
     id: title
@@ -48,6 +47,7 @@ Text {
     h: 40
     font_name: UbuntuCondensed Bold
     font_size: 27
+    color: 1.0, 1.0, 1.0, 1
 }
 
 Text {
@@ -59,6 +59,7 @@ Text {
     h: 26
     font_name: UbuntuCondensed Italic
     font_size: 18
+    color: 1.0, 1.0, 1.0, 1
 }
 
 Text {
@@ -80,6 +81,19 @@ Text {
     font_size: 22
 }
 
+# Show a table if needed TODO: anchor to description bottom
+{% if card.table_data %}
+    Table {
+        id: table
+        data: {{ card.table_data }}
+        x: 100
+        y: 320
+        w: 625
+        font_name: RobotoCondensed Light
+        font_size: 22
+    }
+{% endif %}
+
 # Render stats
 Text {
     text: {{ card.warmup }}
@@ -100,7 +114,7 @@ Text {
     color: 1, 1, 1, 1
     font_name: Ubuntu Bold
     font_size: 26
-    #align: right
+    align: right
 }
 Text {
     text: {{ card.damage }}
@@ -115,7 +129,7 @@ Text {
 
 # Configure the copyright/version text
 Text {
-    text: Author: {{ card.author }}\n© {{ card.creation_year }} and licensed under cc-by-sa
+    text: Author: {{ card.author }}\n© {{ card.creation_year }} and licensed under CC-by-SA
     x: 347
     y: 1001
     w: 263
