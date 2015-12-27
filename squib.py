@@ -224,6 +224,12 @@ def main():
             ']', ' </span>'
         )
 
+        # make the table data available as json
+        table_data = [
+            row.split('|') for row in card['table_data'].split("\n") if row
+        ]
+        card['table_data'] = json.dumps(table_data) if table_data else ""
+
     # Load the template
     with open('portrait.tml', 'r') as infile:
         template = Template(infile.read())
