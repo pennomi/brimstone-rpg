@@ -28,7 +28,7 @@ Svg {
     Text {
         text: {{ tag }}
         x: 75
-        y: {{ 85 + loop.index0 * 40 }}
+        y: {{ 87 + loop.index0 * 40 }}
         w: 195
         h: 30
         color: 1.0, 1.0, 1.0, 1
@@ -81,16 +81,16 @@ Text {
     font_size: 22
 }
 
-# Show a table if needed TODO: anchor to description bottom
+# Show a table if needed TODO: anchor to description bottom automatically
 {% if card.table_data %}
     Table {
         id: table
         data: {{ card.table_data }}
         x: 100
-        y: 320
+        y: {{ card.table_y + 320 }}
         w: 625
         font_name: RobotoCondensed Light
-        font_size: 22
+        font_size: 18
     }
 {% endif %}
 

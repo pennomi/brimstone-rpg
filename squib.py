@@ -20,7 +20,7 @@ def scale_column_widths(columns, total_width):
         # find the biggest column(s)
         biggest = max(columns)
         # and shave off a tiny piece of them
-        columns = [c-1 if c >= biggest else c for c in columns]
+        columns = [c - 1 if c >= biggest else c for c in columns]
     return columns
 
 
@@ -39,15 +39,30 @@ class RenderInstance:
                   h: float=100,
                   color: Color=BLACK,
                   stroke: bool=False,
-                  radius: float=0,  # TODO radius
+                  radius: float=0,
                   dash: float=None):  # TODO: Dash
         self.ctx.set_source_rgba(*color)
-        self.ctx.rectangle(x, y, w, h)
+
+        # Two different methods for rounded and normal rectangles
+        if radius:
+            r = radius
+            self.ctx.move_to(x + r, y)
+            self.ctx.line_to(x + w - r, y)
+            self.ctx.curve_to(x + w, y, x + w, y, x + w, y + r)
+            self.ctx.line_to(x + w, y + h - r)
+            self.ctx.curve_to(x + w, y + h, x + w, y + h, x + w - r, y + h)
+            self.ctx.line_to(x + r, y + h)
+            self.ctx.curve_to(x, y + h, x, y + h, x, y + h - r)
+            self.ctx.line_to(x, y + r)
+            self.ctx.curve_to(x, y, x, y, x + r, y)
+        else:
+            self.ctx.rectangle(x, y, w, h)
+
+        # TODO: Allow stroke instead of fill... or both?
         if stroke:
             self.ctx.stroke()
         else:
             self.ctx.fill()
-        # TODO: Allow stroke instead of fill... or both?
 
     def draw_svg(self,
                  id: str=None,
@@ -115,10 +130,11 @@ class RenderInstance:
         pango_layout = PangoCairo.create_layout(self.ctx)
         pango_layout.set_markup(text, -1)
         pango_layout.set_alignment({
-            "left": Pango.Alignment.LEFT,
-            "center": Pango.Alignment.CENTER,
-            "right": Pango.Alignment.RIGHT,
-        }[align])  # TODO: Warnings for improper grammar
+                                       "left": Pango.Alignment.LEFT,
+                                       "center": Pango.Alignment.CENTER,
+                                       "right": Pango.Alignment.RIGHT,
+                                   }[
+                                       align])  # TODO: Warnings for improper grammar
         pango_layout.set_font_description(font)
         pango_layout.set_wrap(Pango.WrapMode.WORD_CHAR)
         pango_layout.set_width(width)
@@ -132,7 +148,8 @@ class RenderInstance:
 
         # draw a debug box
         if debug:
-            self.draw_rect(x=x, y=y, w=w, h=h, color=Color(0.0, 1.0, 1.0, 1.0), stroke=True)
+            self.draw_rect(x=x, y=y, w=w, h=h, color=Color(0.0, 1.0, 1.0, 1.0),
+                           stroke=True)
 
         # draw the text
         self.ctx.set_source_rgba(*color)
@@ -209,8 +226,8 @@ def main():
     # Do some context processing
     for card in card_data:
         # Use images directory
-        for k in ['background', 'icon']:
-            card[k] = 'images/' + card[k]
+        card['background'] = 'images/' + card['background']
+        card['icon'] = 'images/icons/' + card['icon']
 
         # Tags
         card['tags'] = [s.strip().upper() for s in card['tags'].split(',') if s]
@@ -220,15 +237,19 @@ def main():
             '[', '<span font="UbuntuCondensed Normal 16" rise="3000" '
                  'background="#212121" foreground="#FFFFFF"'
                  'gravity="south"> '
-        ).replace(
-            ']', ' </span>'
-        )
+        ).replace(']', ' </span>')
+        card['table_data'] = card['table_data'].replace(
+            '{', '<span font="FontAwesome Normal 16"> '
+        ).replace('}', ' </span>')
 
         # make the table data available as json
         table_data = [
             row.split('|') for row in card['table_data'].split("\n") if row
-        ]
+            ]
         card['table_data'] = json.dumps(table_data) if table_data else ""
+
+        # parse some keys as ints
+        card['table_y'] = int(card['table_y']) if card['table_y'] else 0
 
     # Load the template
     with open('portrait.tml', 'r') as infile:
@@ -258,6 +279,7 @@ def main():
         blorp.save()
 
         # TODO: Hand and showcase renders
+
 
 if __name__ == "__main__":
     main()
