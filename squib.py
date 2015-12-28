@@ -130,11 +130,10 @@ class RenderInstance:
         pango_layout = PangoCairo.create_layout(self.ctx)
         pango_layout.set_markup(text, -1)
         pango_layout.set_alignment({
-                                       "left": Pango.Alignment.LEFT,
-                                       "center": Pango.Alignment.CENTER,
-                                       "right": Pango.Alignment.RIGHT,
-                                   }[
-                                       align])  # TODO: Warnings for improper grammar
+            "left": Pango.Alignment.LEFT,
+            "center": Pango.Alignment.CENTER,
+            "right": Pango.Alignment.RIGHT,
+        }[align])  # TODO: Warnings for improper grammar
         pango_layout.set_font_description(font)
         pango_layout.set_wrap(Pango.WrapMode.WORD_CHAR)
         pango_layout.set_width(width)
