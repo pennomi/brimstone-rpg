@@ -2,6 +2,8 @@
 """
 import json
 import warnings
+from functools import lru_cache
+
 import cairo
 from gi.repository import Rsvg
 from gi.repository import Pango
@@ -22,6 +24,17 @@ def scale_column_widths(columns, total_width):
         # and shave off a tiny piece of them
         columns = [c - 1 if c >= biggest else c for c in columns]
     return columns
+
+
+@lru_cache(maxsize=100)
+def _load_svg(file: str=None) -> (object, int, int):
+    try:
+        handle = Rsvg.Handle.new_from_file(file)
+    except GError:  # TODO: Improve reason WHY it failed.
+        warnings.warn("Could not load svg file: {}".format(file))
+        raise FileNotFoundError(file)
+    d = handle.get_dimensions()
+    return handle, d.width, d.height
 
 
 class RenderInstance:
@@ -75,12 +88,9 @@ class RenderInstance:
             return
 
         try:
-            handle = Rsvg.Handle.new_from_file(file)
-        except GError:  # TODO: Improve reason WHY it failed.
-            warnings.warn("Could not load svg file: {}".format(file))
+            handle, svg_width, svg_height = _load_svg(file)
+        except FileNotFoundError:
             return
-        d = handle.get_dimensions()
-        svg_width, svg_height = d.width, d.height
 
         # Position/Scale the svg to fit the specified position
         self.ctx.translate(x, y)
@@ -183,9 +193,7 @@ class RenderInstance:
                 widths[i] = max(this_w, widths[i])
 
         # Make the widths smaller until it fits
-        print("Detected widths:", widths)
         widths = scale_column_widths(widths, w)
-        print("Scaled widths:", widths)
 
         # Second pass to do rendering
         y_cursor = 0
@@ -220,16 +228,17 @@ def main():
     wks = get_worksheet_data("Brimstone RPG Powers")
     keys = wks[0]
     card_data = [dict(zip(keys, line)) for line in wks[1:]]
+    card_data = [c for c in card_data if any(c.values())]  # Remove empty lines
 
     print("Rendering card data...")
     # Do some context processing
     for card in card_data:
         # Use images directory
         card['background'] = 'images/' + card['background']
-        card['icon'] = 'images/icons/' + card['icon']
+        card['image'] = 'images/art/' + card['image']
 
-        # Tags
-        card['tags'] = [s.strip().upper() for s in card['tags'].split(',') if s]
+        # Keywords
+        card['keywords'] = [s.strip().upper() for s in card['keywords'].split(',') if s]
 
         # Parse Markup
         card['description'] = card['description'].replace(
