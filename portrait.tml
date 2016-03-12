@@ -18,22 +18,27 @@ Svg {
 }
 
 {% for kw in card.keywords %}
+    {% set kw_top = 207 %}
+    {% set kw_height = 50 %}
+    {% set kw_spacing = 19 %}
+    {% set kw_font_offset = 6 %}
+
     Rect {
         color: .13, .13, .13, 1
         x: 0
-        y: {{ 85 + loop.index0 * 40 }}
-        w: 195
-        h: 30
+        y: {{ kw_top + loop.index0 * (kw_height + kw_spacing) }}
+        w: 263
+        h: {{ kw_height }}
     }
     Text {
         text: {{ kw }}
         x: 75
-        y: {{ 87 + loop.index0 * 40 }}
-        w: 195
-        h: 30
+        y: {{ kw_top + loop.index0 * (kw_height + kw_spacing) + kw_font_offset}}
+        w: 263
+        h: {{ kw_height }}
         color: 1.0, 1.0, 1.0, 1
-        font_name: UbuntuCondensed Normal
-        font_size: 16
+        font_name: DroidSans Bold
+        font_size: 24
     }
 {% endfor %}
 
@@ -54,12 +59,13 @@ Text {
 Text {
     id: subtitle
     text: {{ card.subtitle }}
-    x: 223
-    y: 130
-    w: 430
-    h: 26
-    font_name: UbuntuCondensed Italic
-    font_size: 18
+    x: 0
+    y: 134
+    w: 825
+    h: 30
+    align: center
+    font_name: DroidSans weight=800 Italic
+    font_size: 20
     color: 1.0, 1.0, 1.0, 1
 }
 

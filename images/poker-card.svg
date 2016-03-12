@@ -497,7 +497,8 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Frame"
-     style="display:inline"><rect
+     style="display:inline"
+     sodipodi:insensitive="true"><rect
        style="fill:#5d4037;fill-opacity:1;fill-rule:evenodd;stroke:none"
        id="rect5223"
        width="188"
@@ -508,19 +509,7 @@
        d="m 0,0 825,0 0,150 -37.49481,0 C 750,150 660,155 637,188 l -449,0 C 170,155 75,150 37.486254,150 L 0,150 z"
        id="rect5203"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccccc" /><text
-       xml:space="preserve"
-       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#5d4037;fill-opacity:1;fill-rule:evenodd;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans Bold"
-       x="414.36456"
-       y="163.33478"
-       id="text7471"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan7473"
-         x="414.36456"
-         y="163.33478"
-         style="font-size:28px;font-style:italic;fill:#ffffff;-inkscape-font-specification:Droid Sans Bold Italic">Item - Artifact Weapon</tspan></text>
-<path
+       sodipodi:nodetypes="ccccccccc" /><path
        style="fill:#3e2723;fill-opacity:1;fill-rule:evenodd;stroke:#808424;stroke-width:3;stroke-opacity:1;display:inline;filter:url(#filter7702)"
        d="m 0,1125 825,0 0,-112 -37.49481,0 C 750,1013 660,1008 637,975 l -449,0 c -18,33 -113,38 -150.51375,38 L 0,1013 z"
        id="rect5203-1"
@@ -551,8 +540,8 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="Sample Text"
-     sodipodi:insensitive="true"
-     style="display:none"><text
+     style="display:none"
+     sodipodi:insensitive="true"><text
        xml:space="preserve"
        style="font-size:18px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;display:inline;font-family:Avdira;-inkscape-font-specification:Avdira Bold"
        x="409.92999"
@@ -564,12 +553,24 @@
          x="409.92999"
          y="113.14468"
          style="font-size:48px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Droid Sans;-inkscape-font-specification:Droid Sans Bold">Epic Sword of Smiting Stuff</tspan></text>
+<text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#5d4037;fill-opacity:1;fill-rule:evenodd;stroke:none;display:inline;font-family:Droid Sans;-inkscape-font-specification:Droid Sans Bold"
+       x="410.43042"
+       y="161.20157"
+       id="text7471"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7473"
+         x="410.43042"
+         y="161.20157"
+         style="font-size:28px;font-style:italic;fill:#ffffff;-inkscape-font-specification:Droid Sans Bold Italic">Item - Artifact Weapon</tspan></text>
 </g><g
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="Tags &amp; References"
      sodipodi:insensitive="true"
-     style="display:inline"><rect
+     style="display:none"><rect
        style="fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;display:inline"
        id="rect7522-90"
        width="263.04373"
@@ -664,7 +665,7 @@
          id="rect7522-4"
          style="fill:#d7ccc8;fill-opacity:1;fill-rule:evenodd;stroke:#383838;stroke-width:3;stroke-opacity:1;display:inline" /><path
          transform="translate(-1.9073486e-6,4.2426407)"
-         d="m 114.5513,684.98926 c 0,11.03978 -8.85386,19.98928 -19.77565,19.98928 -10.921789,0 -19.775648,-8.9495 -19.775648,-19.98928 0,-11.03978 8.853859,-19.98929 19.775648,-19.98929 10.92179,0 19.77565,8.94951 19.77565,19.98929 z"
+         d="m 114.5513,684.98926 a 19.775648,19.989286 0 1 1 -39.551298,0 19.775648,19.989286 0 1 1 39.551298,0 z"
          sodipodi:ry="19.989286"
          sodipodi:rx="19.775648"
          sodipodi:cy="684.98926"
@@ -686,7 +687,7 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Mask"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true"><g
        id="g6631"
        style="fill:#ffffff"><rect

@@ -238,7 +238,7 @@ def main():
         card['image'] = 'images/art/' + card['image']
 
         # Keywords
-        card['keywords'] = [s.strip().upper() for s in card['keywords'].split(',') if s]
+        card['keywords'] = [s.strip() for s in card['keywords'].split(',') if s]
 
         # Parse Markup
         card['description'] = card['description'].replace(
