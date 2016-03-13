@@ -16,6 +16,9 @@ from parser import parse
 from jinja2 import Template
 
 
+# TODO: Use asyncio to render everything in parallel
+
+
 def scale_column_widths(columns, total_width):
     # Until we're small enough...
     while sum(columns) > total_width:
@@ -96,7 +99,7 @@ class RenderInstance:
         self.ctx.translate(x, y)
         self.ctx.scale(w / svg_width, h / svg_height)
 
-        # Draw the SVG
+        # Draw the SVG  TODO: Optimize performance somehow?
         Rsvg.Handle.render_cairo(handle, self.ctx)
 
         # Undo the transform
@@ -145,6 +148,7 @@ class RenderInstance:
             "right": Pango.Alignment.RIGHT,
         }[align])  # TODO: Warnings for improper grammar
         pango_layout.set_font_description(font)
+        # pango_layout.set_justify(True)
         pango_layout.set_wrap(Pango.WrapMode.WORD_CHAR)
         pango_layout.set_width(width)
 
@@ -247,7 +251,7 @@ def main():
                  'gravity="south"> '
         ).replace(']', ' </span>')
         card['table_data'] = card['table_data'].replace(
-            '{', '<span font="FontAwesome Normal 16"> '
+            '{', '<span font="FontAwesome Normal 20"> '
         ).replace('}', ' </span>')
 
         # make the table data available as json
@@ -277,6 +281,7 @@ def main():
         for cmd, attrs in instructions:
             func = {
                 "Svg": blorp.draw_svg,
+                # TODO: Image instead of just SVG
                 "Rect": blorp.draw_rect,
                 "Text": blorp.draw_text,
                 "Table": blorp.draw_table,

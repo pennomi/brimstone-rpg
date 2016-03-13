@@ -51,7 +51,7 @@ Text {
     w: 825
     h: 50
     align: center
-    font_name: DroidSans Bold
+    font_name: DroidSerif Bold
     font_size: 36
     color: 1.0, 1.0, 1.0, 1
 }
@@ -64,27 +64,17 @@ Text {
     w: 825
     h: 30
     align: center
-    font_name: DroidSans weight=800 Italic
-    font_size: 20
+    font_name: DroidSerif weight=900 Italic
+    font_size: 24
     color: 1.0, 1.0, 1.0, 1
-}
-
-Text {
-    text: {{ card.target }}
-    x: 275
-    y: 210
-    w: 450
-    h: 80
-    font_name: RobotoCondensed Light
-    font_size: 22
 }
 Text {
     text: {{ card.description }}
-    x: 100
-    y: 320
-    w: 625
+    x: 282
+    y: 207
+    w: 468
     h: 750
-    font_name: RobotoCondensed Light
+    font_name: DroidSerif
     font_size: 22
 }
 
@@ -93,46 +83,16 @@ Text {
     Table {
         id: table
         data: {{ card.table_data }}
-        x: 100
-        y: {{ card.table_y + 320 }}
-        w: 625
-        font_name: RobotoCondensed Light
-        font_size: 18
+        x: 282
+        y: {{ card.table_y + 207 }}
+        w: 468
+        font_name: DroidSerif
+        font_size: 22
     }
 {% endif %}
 
-# Render stats
-Text {
-    text: {{ card.warmup }}
-    x: 80
-    y: 1010
-    w: 40
-    h: 40
-    color: 1, 1, 1, 1
-    font_name: Ubuntu Bold
-    font_size: 26
-}
-Text {
-    text: {{ card.cooldown }}
-    x: 144
-    y: 1010
-    w: 40
-    h: 40
-    color: 1, 1, 1, 1
-    font_name: Ubuntu Bold
-    font_size: 26
-    align: right
-}
-Text {
-    text: {{ card.damage }}
-    x: 640
-    y: 1010
-    w: 110
-    h: 40
-    color: 1, 1, 1, 1
-    font_name: Ubuntu Bold
-    font_size: 26
-}
+# TODO: Render stats
+
 
 # Configure the copyright/version text
 Text {
@@ -143,7 +103,7 @@ Text {
     h: 52
     font_name: RobotoCondensed weight=300 Italic
     font_size: 14
-    color: 0, 0, 0, .5
+    color: 1, 1, 1, .5
     # line_spacing: -5 TODO: Line spacing
 }
 
@@ -162,13 +122,13 @@ Rect {
 }
 
 # The "safe zone" as defined by TheGameCrafter poker cards
-Rect {
-    id: safe
-    x: 75
-    y: 75
-    w: 675
-    h: 975
-    dash: 3 3
-    color: 1, 1, 0, 1
-    stroke: true
-}
+#Rect {
+#    id: safe
+#    x: 75
+#    y: 75
+#    w: 675
+#    h: 975
+#    dash: 3 3
+#    color: 1, 1, 0, 1
+#    stroke: true
+#}
