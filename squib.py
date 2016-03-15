@@ -236,7 +236,9 @@ def main():
 
     print("Rendering card data...")
     # Do some context processing
-    for card in card_data:
+    for i, card in enumerate(card_data):
+        card['id'] = str(i).rjust(3, "0")
+
         # Use images directory
         card['background'] = 'images/' + card['background']
         card['image'] = 'images/art/' + card['image']

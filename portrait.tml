@@ -94,17 +94,31 @@ Text {
 # TODO: Render stats
 
 
-# Configure the copyright/version text
+# Copyright text
 Text {
-    text: Author: {{ card.author }}\n© {{ card.creation_year }} and licensed under CC-by-SA
-    x: 347
-    y: 1001
-    w: 263
+    text: © {{ card.creation_year }}–2016, Brimstone RPG Project
+    x: 341
+    y: 1047
+    w: 800
     h: 52
-    font_name: RobotoCondensed weight=300 Italic
-    font_size: 14
-    color: 1, 1, 1, .5
-    # line_spacing: -5 TODO: Line spacing
+    font_name: DroidSerif Italic
+    font_size: 13
+    color: 1, 1, 1, .25
+}
+
+# TODO: Set icon
+
+# Version Number
+Text {
+    text: {{ card.set }} {{ card.id }} : {{ card.version }}
+    x: 370
+    y: 1012
+    w: 263
+    h: 32
+    align: right
+    font_name: DroidSerif weight=900 Italic
+    font_size: 18
+    color: 1, 1, 1, .25
 }
 
 # Debug Drawing
