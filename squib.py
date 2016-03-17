@@ -240,11 +240,18 @@ def main():
         card['id'] = str(i).rjust(3, "0")
 
         # Use images directory
-        card['background'] = 'images/' + card['background']
+        card['background'] = 'images/frames/' + card['background']
         card['image'] = 'images/art/' + card['image']
 
         # Keywords
         card['keywords'] = [s.strip() for s in card['keywords'].split(',') if s]
+
+        # Stats
+        stats = [_.split('|') for _ in card['stats'].split('\n') if _]
+        card['stats'] = [
+            {'icon': 'images/icons/{}.svg'.format(icon), 'text': text}
+            for icon, text in reversed(stats)
+        ]
 
         # Parse Markup
         card['description'] = card['description'].replace(

@@ -42,6 +42,39 @@ Svg {
     }
 {% endfor %}
 
+{% for stat in card.stats %}
+    {% set stat_top = 930 %}
+    {% set stat_height = 50 %}
+    {% set stat_spacing = 19 %}
+    {% set stat_font_offset = 6 %}
+
+    Rect {
+        color: .13, .13, .13, 1
+        x: 0
+        y: {{ stat_top - loop.index0 * (stat_height + stat_spacing) }}
+        w: 263
+        h: {{ stat_height }}
+    }
+    Text {
+        text: {{ stat.text }}
+        x: {{ 75 + 18 + stat_height }}
+        y: {{ stat_top - loop.index0 * (stat_height + stat_spacing) + stat_font_offset}}
+        w: 263
+        h: {{ stat_height }}
+        color: 1.0, 1.0, 1.0, 1
+        font_name: DroidSans Bold
+        font_size: 24
+    }
+
+    Svg {
+        file: {{ stat.icon }}
+        x: 75
+        y: {{ stat_top - loop.index0 * (stat_height + stat_spacing)}}
+        w: {{ stat_height }}
+        h: {{ stat_height }}
+    }
+{% endfor %}
+
 # Render fancy text
 Text {
     id: title
@@ -91,8 +124,6 @@ Text {
     }
 {% endif %}
 
-# TODO: Render stats
-
 
 # Copyright text
 Text {
@@ -124,18 +155,18 @@ Text {
 # Debug Drawing
 
 # The "cut line"
-Rect {
-    id: cut
-    x: 37.5
-    y: 37.5
-    w: 750
-    h: 1050
-    radius: 16
-    color: 1, 0, 0, 1
-    stroke: true
-}
-
-# The "safe zone" as defined by TheGameCrafter poker cards
+#Rect {
+#    id: cut
+#    x: 37.5
+#    y: 37.5
+#    w: 750
+#    h: 1050
+#    radius: 16
+#    color: 1, 0, 0, 1
+#    stroke: true
+#}
+#
+## The "safe zone" as defined by TheGameCrafter poker cards
 #Rect {
 #    id: safe
 #    x: 75

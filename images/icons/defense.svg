@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 512 512"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   width="100%"
+   height="100%"
+   sodipodi:docname="shield.svg">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="1.3320312"
+     inkscape:cx="256"
+     inkscape:cy="256"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <path
+     d="m 53.156,25.78 c 30.55,26.034 52.813,95.137 52.813,176.47 0,44.36 -6.922,84.657 -17.814,116.688 31.134,71.43 85.946,122.39 179.906,175.28 91.558,-48.747 144.024,-96.565 173.75,-167.593 -12.5,-33.06 -20.28,-76.47 -20.28,-124.375 0,-81.333 22.262,-150.436 52.812,-176.47 -41.924,9.324 -104.819,18.4565 -125.78,20.595 -20.961,2.1385 -52.02978,6.246144 -88.625,4.845 C 223.34278,49.818856 113.11466,41.047132 53.156,25.78 z"
+     id="path6"
+     style="fill:#ffffff;fill-rule:evenodd"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cscccscssc" />
+</svg>
