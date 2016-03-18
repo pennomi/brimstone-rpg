@@ -5,9 +5,8 @@ import warnings
 from functools import lru_cache
 
 import cairo
-from gi.repository import Rsvg
-from gi.repository import Pango
-from gi.repository import PangoCairo
+from gi.repository import Pango, PangoCairo, Gdk, GdkPixbuf
+# noinspection PyUnresolvedReferences
 from gi.repository.GLib import GError
 import tqdm as tqdm
 from google_sheets import get_worksheet_data
@@ -30,14 +29,13 @@ def scale_column_widths(columns, total_width):
 
 
 @lru_cache(maxsize=100)
-def _load_svg(file: str=None) -> (object, int, int):
+def _load_image(file: str=None) -> (object, int, int):
     try:
-        handle = Rsvg.Handle.new_from_file(file)
-    except GError:  # TODO: Improve reason WHY it failed.
-        warnings.warn("Could not load svg file: {}".format(file))
+        pb = GdkPixbuf.Pixbuf.new_from_file(file)
+    except GError:
+        warnings.warn("Could not load file: {}".format(file))
         raise FileNotFoundError(file)
-    d = handle.get_dimensions()
-    return handle, d.width, d.height
+    return pb, pb.get_width(), pb.get_height()
 
 
 class RenderInstance:
@@ -55,8 +53,7 @@ class RenderInstance:
                   h: float=100,
                   color: Color=BLACK,
                   stroke: bool=False,
-                  radius: float=0,
-                  dash: float=None):  # TODO: Dash
+                  radius: float=0):
         self.ctx.set_source_rgba(*color)
 
         # Two different methods for rounded and normal rectangles
@@ -80,30 +77,28 @@ class RenderInstance:
         else:
             self.ctx.fill()
 
-    def draw_svg(self,
-                 id: str=None,
-                 x: float=0,
-                 y: float=0,
-                 w: float=100,
-                 h: float=100,
-                 file: str=None):
-        if not file:
-            return
-
+    def draw_image(self,
+                   id: str="",
+                   x: float=0,
+                   y: float=0,
+                   w: float=100,
+                   h: float=100,
+                   file: str=""):
         try:
-            handle, svg_width, svg_height = _load_svg(file)
+            buffer, width, height = _load_image(file)
         except FileNotFoundError:
             return
 
         # Position/Scale the svg to fit the specified position
         self.ctx.translate(x, y)
-        self.ctx.scale(w / svg_width, h / svg_height)
+        self.ctx.scale(w / width, h / height)
 
-        # Draw the SVG  TODO: Optimize performance somehow?
-        Rsvg.Handle.render_cairo(handle, self.ctx)
+        # Draw the image
+        Gdk.cairo_set_source_pixbuf(self.ctx, buffer, 0, 0)
+        self.ctx.paint()
 
         # Undo the transform
-        self.ctx.scale(svg_width / w, svg_height / h)
+        self.ctx.scale(width / w, height / h)
         self.ctx.translate(-x, -y)
 
     def _get_text_size(self, text, font, w=None):
@@ -226,8 +221,22 @@ class RenderInstance:
         self.surface.write_to_png("_output/card{}.png".format(self.index))
 
 
+def replace_markup(card, key):
+    """Replaces [] with a background color tag and {} with fontawesome icons.
+    """
+    # [] Tags
+    card[key] = card[key].replace(
+        '[', '<span font="UbuntuCondensed Normal 16" rise="3000" '
+             'background="#212121" foreground="#FFFFFF"'
+             'gravity="south"> '
+    ).replace(']', ' </span>')
+
+    # {} Tags
+    card[key] = card[key].replace(
+        '{', '<span font="FontAwesome Normal"> ').replace('}', ' </span>')
+
+
 def main():
-    print("Test commencing.")
     # Load the data from Google Sheets
     wks = get_worksheet_data("Brimstone RPG Powers")
     keys = wks[0]
@@ -241,7 +250,11 @@ def main():
 
         # Use images directory
         card['background'] = 'images/frames/' + card['background']
-        card['image'] = 'images/art/' + card['image']
+        if card['image']:
+            card['image'] = 'images/art/' + card['image']
+
+        # Put the paintbrush on the artist
+        card['artist'] = "{}" + card['artist']
 
         # Keywords
         card['keywords'] = [s.strip() for s in card['keywords'].split(',') if s]
@@ -253,15 +266,13 @@ def main():
             for icon, text in reversed(stats)
         ]
 
+        # Ensure description uses \n notation
+        card['description'] = card['description'].replace('\n', '\\n')
+
         # Parse Markup
-        card['description'] = card['description'].replace(
-            '[', '<span font="UbuntuCondensed Normal 16" rise="3000" '
-                 'background="#212121" foreground="#FFFFFF"'
-                 'gravity="south"> '
-        ).replace(']', ' </span>')
-        card['table_data'] = card['table_data'].replace(
-            '{', '<span font="FontAwesome Normal 20"> '
-        ).replace('}', ' </span>')
+        replace_markup(card, 'description')
+        replace_markup(card, 'table_data')
+        replace_markup(card, 'artist')
 
         # make the table data available as json
         table_data = [
@@ -289,8 +300,7 @@ def main():
         blorp = RenderInstance(i, 825, 1125)
         for cmd, attrs in instructions:
             func = {
-                "Svg": blorp.draw_svg,
-                # TODO: Image instead of just SVG
+                "Image": blorp.draw_image,
                 "Rect": blorp.draw_rect,
                 "Text": blorp.draw_text,
                 "Table": blorp.draw_table,

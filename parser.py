@@ -1,5 +1,5 @@
 from pyparsing import Literal, Word, srange, Group, OneOrMore, Dict, \
-    nestedExpr, restOfLine
+    nestedExpr, restOfLine, stringEnd, ParseException
 
 # TODO: Inline Comments SkipTo and remove \n from whitespace?
 # TODO: Syntax errors are just failing silently for some reason
@@ -23,7 +23,7 @@ def _build():
     command = Group(command_name + fields)
 
     # Configure the parser
-    tml_parser = OneOrMore(command)
+    tml_parser = OneOrMore(command) + stringEnd
     tml_parser.ignore(comment)
     return tml_parser
 TML_PARSER = _build()
@@ -46,9 +46,13 @@ def _parse_expression(key: str, exp: str):
 
 
 def parse(string: str) -> list:
-    commands = []
-    for c, attrs in TML_PARSER.parseString(string):
-        attrs = attrs.asDict()
-        attrs = {k: _parse_expression(k, v) for k, v in attrs.items()}
-        commands.append((c, attrs))
-    return commands
+    try:
+        commands = []
+        for c, attrs in TML_PARSER.parseString(string):
+            attrs = attrs.asDict()
+            attrs = {k: _parse_expression(k, v) for k, v in attrs.items()}
+            commands.append((c, attrs))
+        return commands
+    except ParseException:
+        print(string)
+        return []

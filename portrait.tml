@@ -1,5 +1,41 @@
+# Card art
+{% if card.image %}
+    Image {
+        id: art
+        file: {{ card.image }}
+        x: 185
+        y: 149
+        w: 640
+        h: 412
+    }
+    Text {
+        id: artist_shadow
+        text: {{ card.artist }}
+        x: 247
+        y: 535
+        w: 500
+        h: 26
+        align: right
+        color: 0.0, 0.0, 0.0, 1
+        font_name: DroidSerif weight=900 Italic
+        font_size: 14
+    }
+    Text {
+        id: artist
+        text: {{ card.artist }}
+        x: 246
+        y: 534
+        w: 500
+        h: 26
+        align: right
+        color: 1.0, 1.0, 1.0, 1
+        font_name: DroidSerif weight=900 Italic
+        font_size: 14
+    }
+{% endif %}
+
 # Set up the background and icon
-Svg {
+Image {
     id: background
     file: {{ card.background }}
     x: 0
@@ -8,7 +44,7 @@ Svg {
     h: 1125
 }
 
-Svg {
+Image {
     id: icon
     file: {{ card.icon }}
     x: 675
@@ -66,7 +102,7 @@ Svg {
         font_size: 24
     }
 
-    Svg {
+    Image {
         file: {{ stat.icon }}
         x: 75
         y: {{ stat_top - loop.index0 * (stat_height + stat_spacing)}}
@@ -101,10 +137,11 @@ Text {
     font_size: 24
     color: 1.0, 1.0, 1.0, 1
 }
+
 Text {
     text: {{ card.description }}
     x: 282
-    y: 207
+    y: {% if card.image %}579{% else %}207{% endif %}
     w: 468
     h: 750
     font_name: DroidSerif
@@ -165,15 +202,14 @@ Text {
 #    color: 1, 0, 0, 1
 #    stroke: true
 #}
-#
-## The "safe zone" as defined by TheGameCrafter poker cards
+
+# The "safe zone" as defined by TheGameCrafter poker cards
 #Rect {
 #    id: safe
 #    x: 75
 #    y: 75
 #    w: 675
 #    h: 975
-#    dash: 3 3
 #    color: 1, 1, 0, 1
 #    stroke: true
 #}
