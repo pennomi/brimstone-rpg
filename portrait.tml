@@ -44,15 +44,6 @@ Image {
     h: 1125
 }
 
-Image {
-    id: icon
-    file: {{ card.icon }}
-    x: 675
-    y: 80
-    w: 70
-    h: 70
-}
-
 {% for kw in card.keywords %}
     {% set kw_top = 207 %}
     {% set kw_height = 50 %}
@@ -156,6 +147,7 @@ Text {
         x: 282
         y: {{ card.table_y + 207 }}
         w: 468
+        padding_x: 6
         font_name: DroidSerif
         font_size: 22
     }

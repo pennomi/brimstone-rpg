@@ -171,6 +171,8 @@ class RenderInstance:
                    y: float=0,
                    w: float=100,
                    # h: float=100,  # TODO: Is this even a thing?
+                   padding_x: int=2,
+                   padding_y: int=2,
                    color: Color=BLACK,
                    border_color: Color=BLACK,
                    font_name: str="Ubuntu",
@@ -189,33 +191,37 @@ class RenderInstance:
         for row in data:
             for i, value in enumerate(row):
                 this_w, _ = self._get_text_size(value, font)
+                this_w += padding_x * 2
                 widths[i] = max(this_w, widths[i])
 
         # Make the widths smaller until it fits
         widths = scale_column_widths(widths, w)
 
         # Second pass to do rendering
-        y_cursor = 0
+        cursor_y = 0
         for i, row in enumerate(data):
-            x_cursor = 0
+            cursor_x = 0
 
             # calculate the height of this row
             height = 0
             for j, value in enumerate(row):
                 _, h = self._get_text_size(value, font, w=widths[j])
                 height = max(height, h)
+            height += padding_y * 2
 
             for j, value in enumerate(row):
                 # render the table cell
-                self.draw_rect(x=x + x_cursor, y=y + y_cursor, w=widths[j],
+                self.draw_rect(x=x + cursor_x, y=y + cursor_y, w=widths[j],
                                h=height, stroke=True, color=border_color)
                 # then render the text inside it
-                self.draw_text(text=value, x=x + x_cursor, y=y + y_cursor,
+                self.draw_text(text=value,
+                               x=x + cursor_x + padding_x,
+                               y=y + cursor_y + padding_y,
                                w=widths[j], h=height, color=color,
                                font_name=font_name, font_size=font_size)
-                x_cursor += widths[j]
+                cursor_x += widths[j]
 
-            y_cursor += height
+            cursor_y += height
 
     def save(self):
         self.surface.write_to_png("_output/card{}.png".format(self.index))
@@ -233,7 +239,7 @@ def replace_markup(card, key):
 
     # {} Tags
     card[key] = card[key].replace(
-        '{', '<span font="FontAwesome Normal"> ').replace('}', ' </span>')
+        '{', '<span font="FontAwesome Normal">').replace('}', '</span>')
 
 
 def main():
@@ -276,8 +282,10 @@ def main():
 
         # make the table data available as json
         table_data = [
-            row.split('|') for row in card['table_data'].split("\n") if row
-            ]
+            [_.strip() for _ in row.split('|')]
+            for row in card['table_data'].split("\n")
+            if row
+        ]
         card['table_data'] = json.dumps(table_data) if table_data else ""
 
         # parse some keys as ints
