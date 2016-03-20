@@ -12,7 +12,7 @@ def replace_markup(card, key):
     """
     # [] Tags
     card[key] = card[key].replace(
-        '[', '<span font="DroidSans Bold 16" rise="3000" '
+        '[', '<span font="DroidSans Bold 20" rise="1000" '
              'background="#212121" foreground="#FFFFFF"'
              'gravity="south"> '
     ).replace(']', ' </span>')

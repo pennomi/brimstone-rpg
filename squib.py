@@ -116,6 +116,7 @@ class RenderInstance:
                   font_name: str="Ubuntu",
                   font_size: int=16,
                   align: str="left",
+                  line_spacing: int=0,
                   debug: bool=False,
                   ):
         text = text.replace("\\n", "\n")
@@ -129,6 +130,7 @@ class RenderInstance:
         # Generate the text
         pango_layout = PangoCairo.create_layout(self.ctx)
         pango_layout.set_markup(text, -1)
+        pango_layout.set_spacing(line_spacing * Pango.SCALE)
         pango_layout.set_alignment({
             "left": Pango.Alignment.LEFT,
             "center": Pango.Alignment.CENTER,

@@ -124,6 +124,7 @@ Text {
     y: {% if card.image %}579{% else %}207{% endif %}
     w: 581
     h: 750
+    line_spacing: 2
     font_name: DroidSerif
     font_size: 22
 }

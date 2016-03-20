@@ -38,7 +38,8 @@ def _parse_expression(key: str, exp: str):
     # TODO: Use regex to validate first?
     # TODO: Maybe PyParsing could validate it
     # TODO: Support expressions
-    if key in ["x", "y", "w", "h", "radius", "padding_x", "padding_y"]:
+    if key in ["x", "y", "w", "h", "radius", "padding_x", "padding_y",
+               "line_spacing"]:
         return float(exp)
     if key == "color":
         return Color(*tuple(float(e) for e in exp.split(',')))
