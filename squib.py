@@ -9,17 +9,12 @@ import math
 from gi.repository import Pango, PangoCairo, Gdk, GdkPixbuf
 # noinspection PyUnresolvedReferences
 from gi.repository.GLib import GError
-import tqdm as tqdm
-from google_sheets import get_worksheet_data
-from util import Color, BLACK
+
 from parser import parse
-from jinja2 import Template
+from util import Color, BLACK
 
 
-# TODO: Use asyncio to render everything in parallel
-
-
-def scale_column_widths(columns, total_width):
+def _scale_column_widths(columns, total_width):
     # Until we're small enough...
     while sum(columns) > total_width:
         # find the biggest column(s)
@@ -40,8 +35,8 @@ def _load_image(file: str=None) -> (object, int, int):
 
 
 class RenderInstance:
-    def __init__(self, index, width, height):
-        self.index = index
+    def __init__(self, filename, width, height):
+        self.filename = filename
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         self.ctx = cairo.Context(self.surface)
         self.pctx = PangoCairo.create_context(self.ctx)
@@ -57,7 +52,7 @@ class RenderInstance:
                   radius: float=0):
         self.ctx.set_source_rgba(*color)
 
-        # Two different methods for rounded and normal rectangles
+        # Draw the geometry
         r = radius
         pi2 = math.pi/2
         self.ctx.move_to(x, y + r)
@@ -68,6 +63,7 @@ class RenderInstance:
         self.ctx.close_path()
 
         # TODO: Allow stroke instead of fill... or both?
+        # Stroke or fill it
         if stroke:
             self.ctx.stroke()
         else:
@@ -191,7 +187,7 @@ class RenderInstance:
                 widths[i] = max(this_w, widths[i])
 
         # Make the widths smaller until it fits
-        widths = scale_column_widths(widths, w)
+        widths = _scale_column_widths(widths, w)
 
         # Second pass to do rendering
         cursor_y = 0
@@ -220,99 +216,23 @@ class RenderInstance:
             cursor_y += height
 
     def save(self):
-        self.surface.write_to_png("_output/card{}.png".format(self.index))
+        self.surface.write_to_png(self.filename)
 
 
-def replace_markup(card, key):
-    """Replaces [] with a background color tag and {} with fontawesome icons.
-    """
-    # [] Tags
-    card[key] = card[key].replace(
-        '[', '<span font="DroidSans Bold 16" rise="3000" '
-             'background="#212121" foreground="#FFFFFF"'
-             'gravity="south"> '
-    ).replace(']', ' </span>')
+def render_string(layout, w, h, filename):
+    # Parse the template
+    instructions = parse(layout)
 
-    # {} Tags
-    card[key] = card[key].replace(
-        '{', '<span font="FontAwesome Normal">').replace('}', '</span>')
+    # Based on the template, run the operations specified
+    blorp = RenderInstance(filename, w, h)
+    for cmd, attrs in instructions:
+        func = {
+            "Image": blorp.draw_image,
+            "Rect": blorp.draw_rect,
+            "Text": blorp.draw_text,
+            "Table": blorp.draw_table,
+        }[cmd]
+        func(**attrs)
 
-
-def main():
-    # Load the data from Google Sheets
-    wks = get_worksheet_data("Brimstone RPG Powers")
-    keys = wks[0]
-    card_data = [dict(zip(keys, line)) for line in wks[1:]]
-    card_data = [c for c in card_data if any(c.values())]  # Remove empty lines
-
-    print("Rendering card data...")
-    # Do some context processing
-    for i, card in enumerate(card_data):
-        card['id'] = str(i).rjust(3, "0")
-
-        # Use images directory
-        card['background'] = 'images/frames/' + card['background']
-        if card['image']:
-            card['image'] = 'images/art/' + card['image']
-
-        # Put the paintbrush on the artist
-        card['artist'] = "{}" + card['artist']
-
-        # Stats
-        stats = [_.split('|') for _ in card['stats'].split('\n') if _]
-        card['stats'] = [
-            {'icon': 'images/icons/{}.svg'.format(icon), 'text': text}
-            for icon, text in stats
-        ]
-
-        # Ensure description uses \n notation
-        card['description'] = card['description'].replace('\n', '\\n')
-
-        # Parse Markup
-        replace_markup(card, 'description')
-        replace_markup(card, 'table_data')
-        replace_markup(card, 'artist')
-
-        # make the table data available as json
-        table_data = [
-            [_.strip() for _ in row.split('|')]
-            for row in card['table_data'].split("\n")
-            if row
-        ]
-        card['table_data'] = json.dumps(table_data) if table_data else ""
-
-        # parse some keys as ints
-        card['table_y'] = int(card['table_y']) if card['table_y'] else 0
-
-    # Load the template
-    with open('portrait.tml', 'r') as infile:
-        template = Template(infile.read())
-
-    # Iterate over each card and render it
-    for i, card in enumerate(tqdm.tqdm(card_data)):
-        # Render the template using this card's data
-        layout = template.render(card=card)
-
-        # TODO: Everything below here probably becomes a core function call
-        # Parse the template
-        instructions = parse(layout)
-
-        # Based on the template, run the operations specified
-        blorp = RenderInstance(i, 825, 1125)
-        for cmd, attrs in instructions:
-            func = {
-                "Image": blorp.draw_image,
-                "Rect": blorp.draw_rect,
-                "Text": blorp.draw_text,
-                "Table": blorp.draw_table,
-            }[cmd]
-            func(**attrs)
-
-        # Save the card to file
-        blorp.save()
-
-        # TODO: Hand and showcase renders
-
-
-if __name__ == "__main__":
-    main()
+    # Save the card to file
+    blorp.save()
