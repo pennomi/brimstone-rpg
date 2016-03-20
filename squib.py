@@ -258,14 +258,11 @@ def main():
         # Put the paintbrush on the artist
         card['artist'] = "{}" + card['artist']
 
-        # Keywords
-        card['keywords'] = [s.strip() for s in card['keywords'].split(',') if s]
-
         # Stats
         stats = [_.split('|') for _ in card['stats'].split('\n') if _]
         card['stats'] = [
             {'icon': 'images/icons/{}.svg'.format(icon), 'text': text}
-            for icon, text in reversed(stats)
+            for icon, text in stats
         ]
 
         # Ensure description uses \n notation

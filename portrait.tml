@@ -3,9 +3,9 @@
     Image {
         id: art
         file: {{ card.image }}
-        x: 185
+        x: 72
         y: 149
-        w: 640
+        w: 753
         h: 412
     }
     Text {
@@ -44,61 +44,50 @@ Image {
     h: 1125
 }
 
-{% for kw in card.keywords %}
-    {% set kw_top = 207 %}
-    {% set kw_height = 50 %}
-    {% set kw_spacing = 19 %}
-    {% set kw_font_offset = 6 %}
-
-    Rect {
-        color: .13, .13, .13, 1
-        x: 0
-        y: {{ kw_top + loop.index0 * (kw_height + kw_spacing) }}
-        w: 263
-        h: {{ kw_height }}
-    }
-    Text {
-        text: {{ kw }}
-        x: 75
-        y: {{ kw_top + loop.index0 * (kw_height + kw_spacing) + kw_font_offset}}
-        w: 263
-        h: {{ kw_height }}
-        color: 1.0, 1.0, 1.0, 1
-        font_name: DroidSans Bold
-        font_size: 24
-    }
-{% endfor %}
-
 {% for stat in card.stats %}
-    {% set stat_top = 930 %}
-    {% set stat_height = 50 %}
-    {% set stat_spacing = 19 %}
-    {% set stat_font_offset = 6 %}
+    {% set stat_top = 207 %}
+    {% set stat_spacing = 30 %}
+    {% set stat_height = 60 %}
+
+    {% set stat_icon_size = 37 %}
+    {% set stat_icon_padding = 4 %}
+
+    {% set stat_font_offset = 20 %}
 
     Rect {
         color: .13, .13, .13, 1
         x: 0
-        y: {{ stat_top - loop.index0 * (stat_height + stat_spacing) }}
-        w: 263
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) }}
+        w: 150
         h: {{ stat_height }}
     }
+
     Text {
         text: {{ stat.text }}
-        x: {{ 75 + 18 + stat_height }}
-        y: {{ stat_top - loop.index0 * (stat_height + stat_spacing) + stat_font_offset}}
+        x: 75
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + stat_font_offset}}
         w: 263
         h: {{ stat_height }}
         color: 1.0, 1.0, 1.0, 1
         font_name: DroidSans Bold
-        font_size: 24
+        font_size: 22
+    }
+
+    Rect {
+        color: .13, .13, .13, 1
+        x: 75
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) - stat_icon_size / 2}}
+        w: {{ stat_icon_size }}
+        h: {{ stat_icon_size }}
+        radius: {{ stat_icon_size / 2 }}
     }
 
     Image {
         file: {{ stat.icon }}
-        x: 75
-        y: {{ stat_top - loop.index0 * (stat_height + stat_spacing)}}
-        w: {{ stat_height }}
-        h: {{ stat_height }}
+        x: {{ 75 + stat_icon_padding }}
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + stat_icon_padding - stat_icon_size / 2 }}
+        w: {{ stat_icon_size - stat_icon_padding * 2 }}
+        h: {{ stat_icon_size - stat_icon_padding * 2 }}
     }
 {% endfor %}
 
@@ -125,15 +114,15 @@ Text {
     h: 30
     align: center
     font_name: DroidSerif weight=900 Italic
-    font_size: 24
+    font_size: 22
     color: 1.0, 1.0, 1.0, 1
 }
 
 Text {
     text: {{ card.description }}
-    x: 282
+    x: 169
     y: {% if card.image %}579{% else %}207{% endif %}
-    w: 468
+    w: 581
     h: 750
     font_name: DroidSerif
     font_size: 22
@@ -144,9 +133,9 @@ Text {
     Table {
         id: table
         data: {{ card.table_data }}
-        x: 282
+        x: 169
         y: {{ card.table_y + 207 }}
-        w: 468
+        w: 581
         padding_x: 6
         font_name: DroidSerif
         font_size: 22
