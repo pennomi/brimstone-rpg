@@ -5,6 +5,7 @@ import warnings
 from functools import lru_cache
 
 import cairo
+import math
 from gi.repository import Pango, PangoCairo, Gdk, GdkPixbuf
 # noinspection PyUnresolvedReferences
 from gi.repository.GLib import GError
@@ -57,19 +58,14 @@ class RenderInstance:
         self.ctx.set_source_rgba(*color)
 
         # Two different methods for rounded and normal rectangles
-        if radius:
-            r = radius
-            self.ctx.move_to(x + r, y)
-            self.ctx.line_to(x + w - r, y)
-            self.ctx.curve_to(x + w, y, x + w, y, x + w, y + r)
-            self.ctx.line_to(x + w, y + h - r)
-            self.ctx.curve_to(x + w, y + h, x + w, y + h, x + w - r, y + h)
-            self.ctx.line_to(x + r, y + h)
-            self.ctx.curve_to(x, y + h, x, y + h, x, y + h - r)
-            self.ctx.line_to(x, y + r)
-            self.ctx.curve_to(x, y, x, y, x + r, y)
-        else:
-            self.ctx.rectangle(x, y, w, h)
+        r = radius
+        pi2 = math.pi/2
+        self.ctx.move_to(x, y + r)
+        self.ctx.arc(x + r, y + r, r, 2*pi2, 3*pi2)
+        self.ctx.arc(x + w - r, y + r, r, 3*pi2, 0*pi2)
+        self.ctx.arc(x + w - r, y + h - r, r, 0*pi2, 1*pi2)
+        self.ctx.arc(x + r, y + h - r, r, 1*pi2, 2*pi2)
+        self.ctx.close_path()
 
         # TODO: Allow stroke instead of fill... or both?
         if stroke:
