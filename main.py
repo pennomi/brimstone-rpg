@@ -49,7 +49,7 @@ def main():
              'text': text,
              'name': icon.upper()}
             for icon, text in stats
-            ]
+        ]
 
         # Ensure description uses \n notation
         card['description'] = card['description'].replace('\n', '\\n')
