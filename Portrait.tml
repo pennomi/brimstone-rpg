@@ -47,12 +47,12 @@ Image {
 {% for stat in card.stats %}
     {% set stat_top = 207 %}
     {% set stat_spacing = 30 %}
-    {% set stat_height = 60 %}
+    {% set stat_height = 68 %}
 
     {% set stat_icon_size = 37 %}
     {% set stat_icon_padding = 4 %}
 
-    {% set stat_font_offset = 20 %}
+    {% set stat_font_offset = 30 %}
 
     Rect {
         color: .13, .13, .13, 1
@@ -88,6 +88,17 @@ Image {
         y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + stat_icon_padding - stat_icon_size / 2 }}
         w: {{ stat_icon_size - stat_icon_padding * 2 }}
         h: {{ stat_icon_size - stat_icon_padding * 2 }}
+    }
+
+    Text {
+        text: {{ stat.name }}
+        x: 75
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + stat_icon_size / 2 - stat_icon_padding}}
+        w: 263
+        h: {{ stat_height }}
+        color: 1.0, 1.0, 1.0, 1
+        font_name: DroidSans
+        font_size: 10
     }
 {% endfor %}
 
@@ -174,24 +185,24 @@ Text {
 # Debug Drawing
 
 # The "cut line"
-#Rect {
-#    id: cut
-#    x: 37.5
-#    y: 37.5
-#    w: 750
-#    h: 1050
-#    radius: 16
-#    color: 1, 0, 0, 1
-#    stroke: true
-#}
+Rect {
+    id: cut
+    x: 37.5
+    y: 37.5
+    w: 750
+    h: 1050
+    radius: 16
+    color: 1, 0, 0, 1
+    stroke: true
+}
 
 # The "safe zone" as defined by TheGameCrafter poker cards
-#Rect {
-#    id: safe
-#    x: 75
-#    y: 75
-#    w: 675
-#    h: 975
-#    color: 1, 1, 0, 1
-#    stroke: true
-#}
+Rect {
+    id: safe
+    x: 75
+    y: 75
+    w: 675
+    h: 975
+    color: 1, 1, 0, 1
+    stroke: true
+}

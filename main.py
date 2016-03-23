@@ -45,7 +45,9 @@ def main():
         # Stats
         stats = [_.split('|') for _ in card['stats'].split('\n') if _]
         card['stats'] = [
-            {'icon': 'images/icons/{}.svg'.format(icon), 'text': text}
+            {'icon': 'images/icons/{}.svg'.format(icon),
+             'text': text,
+             'name': icon.upper()}
             for icon, text in stats
             ]
 
@@ -56,6 +58,7 @@ def main():
         replace_markup(card, 'description')
         replace_markup(card, 'table_data')
         replace_markup(card, 'artist')
+        replace_markup(card, 'set')
 
         # make the table data available as json
         table_data = [
@@ -69,7 +72,7 @@ def main():
         card['table_y'] = int(card['table_y']) if card['table_y'] else 0
 
     # Load the template
-    with open('portrait.tml', 'r') as infile:
+    with open('Portrait.tml', 'r') as infile:
         template = Template(infile.read())
 
     # Iterate over each card and render it
