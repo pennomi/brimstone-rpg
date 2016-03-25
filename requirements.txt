@@ -1,0 +1,7 @@
+tqdm
+jinja2
+gspread
+oauth2client
+pyopenssl
+pgi
+pyparsing

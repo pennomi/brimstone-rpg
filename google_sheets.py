@@ -1,15 +1,13 @@
 import json
 import gspread
-from oauth2client.client import SignedJwtAssertionCredentials
+from oauth2client.service_account import ServiceAccountCredentials
 
 def get_worksheet_data(name):
     with open('credentials.json') as infile:
         data = json.load(infile)
 
-    credentials = SignedJwtAssertionCredentials(
-        data['client_email'], data['private_key'].encode(),
-        ['https://spreadsheets.google.com/feeds']
-    )
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+        'credentials.json', ['https://spreadsheets.google.com/feeds'])
 
     print("Authorizing...")
     gc = gspread.authorize(credentials)

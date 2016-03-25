@@ -4,11 +4,16 @@ import json
 import warnings
 from functools import lru_cache
 
-import cairo
+import cairocffi as cairo
 import math
-from gi.repository import Pango, PangoCairo, Gdk, GdkPixbuf
-# noinspection PyUnresolvedReferences
-from gi.repository.GLib import GError
+
+import pgi
+# pgi.require_version('Pango', '1.0')
+# pgi.require_version('PangoCairo', '1.0')
+pgi.require_version('Gdk', '3.0')
+pgi.install_as_gi()
+from gi.repository import Gdk, GdkPixbuf, GLib
+from gi.repository import Pango, PangoCairo
 
 from parser import parse
 from util import Color, BLACK
@@ -28,7 +33,7 @@ def _scale_column_widths(columns, total_width):
 def _load_image(file: str=None) -> (object, int, int):
     try:
         pb = GdkPixbuf.Pixbuf.new_from_file(file)
-    except GError:
+    except GLib.GError:  # TODO: Untested
         warnings.warn("Could not load file: {}".format(file))
         raise FileNotFoundError(file)
     return pb, pb.get_width(), pb.get_height()
@@ -39,7 +44,6 @@ class RenderInstance:
         self.filename = filename
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         self.ctx = cairo.Context(self.surface)
-        self.pctx = PangoCairo.create_context(self.ctx)
 
     def draw_rect(self,
                   id: str="",
@@ -119,6 +123,7 @@ class RenderInstance:
                   line_spacing: int=0,
                   debug: bool=False,
                   ):
+        pass
         text = text.replace("\\n", "\n")
         # make the font
         font = Pango.FontDescription("{} {}".format(font_name, font_size))
