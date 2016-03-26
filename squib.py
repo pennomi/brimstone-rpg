@@ -2,20 +2,9 @@
 """
 import json
 import warnings
-from functools import lru_cache
-
-import cairocffi as cairo
-import math
-
-import pgi
-# pgi.require_version('Pango', '1.0')
-# pgi.require_version('PangoCairo', '1.0')
-pgi.require_version('Gdk', '3.0')
-pgi.install_as_gi()
-from gi.repository import Gdk, GdkPixbuf, GLib
-from gi.repository import Pango, PangoCairo
 
 from parser import parse
+from renderer import CairoRenderer, TextAlignment
 from util import Color, BLACK
 
 
@@ -29,21 +18,10 @@ def _scale_column_widths(columns, total_width):
     return columns
 
 
-@lru_cache(maxsize=100)
-def _load_image(file: str=None) -> (object, int, int):
-    try:
-        pb = GdkPixbuf.Pixbuf.new_from_file(file)
-    except GLib.GError:  # TODO: Untested
-        warnings.warn("Could not load file: {}".format(file))
-        raise FileNotFoundError(file)
-    return pb, pb.get_width(), pb.get_height()
-
-
 class RenderInstance:
     def __init__(self, filename, width, height):
         self.filename = filename
-        self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-        self.ctx = cairo.Context(self.surface)
+        self.renderer = CairoRenderer(width, height)
 
     def draw_rect(self,
                   id: str="",
@@ -53,25 +31,14 @@ class RenderInstance:
                   h: float=100,
                   color: Color=BLACK,
                   stroke: bool=False,
-                  radius: float=0):
-        self.ctx.set_source_rgba(*color)
-
-        # Draw the geometry
-        r = radius
-        pi2 = math.pi/2
-        self.ctx.move_to(x, y + r)
-        self.ctx.arc(x + r, y + r, r, 2*pi2, 3*pi2)
-        self.ctx.arc(x + w - r, y + r, r, 3*pi2, 0*pi2)
-        self.ctx.arc(x + w - r, y + h - r, r, 0*pi2, 1*pi2)
-        self.ctx.arc(x + r, y + h - r, r, 1*pi2, 2*pi2)
-        self.ctx.close_path()
-
-        # TODO: Allow stroke instead of fill... or both?
-        # Stroke or fill it
+                  fill: bool=True,
+                  radius: float=0) -> None:
+        self.renderer.set_color(*color)
+        self.renderer.plot_rectangle(x, y, w, h, radius)
         if stroke:
-            self.ctx.stroke()
-        else:
-            self.ctx.fill()
+            self.renderer.stroke()
+        if fill:
+            self.renderer.fill()
 
     def draw_image(self,
                    id: str="",
@@ -79,89 +46,61 @@ class RenderInstance:
                    y: float=0,
                    w: float=100,
                    h: float=100,
-                   file: str=""):
+                   file: str="") -> None:
+        # TODO: Check the transforms
         try:
-            buffer, width, height = _load_image(file)
+            width, height = self.renderer.set_image_buffer(file)
         except FileNotFoundError:
+            warnings.warn("Could not load file: {}".format(file))
             return
-
-        # Position/Scale the svg to fit the specified position
-        self.ctx.translate(x, y)
-        self.ctx.scale(w / width, h / height)
-
-        # Draw the image
-        Gdk.cairo_set_source_pixbuf(self.ctx, buffer, 0, 0)
-        self.ctx.paint()
-
-        # Undo the transform
-        self.ctx.scale(width / w, height / h)
-        self.ctx.translate(-x, -y)
-
-    def _get_text_size(self, text, font, w=None):
-        text = text.replace("\\n", "\n")
-
-        # Generate the text
-        pango_layout = PangoCairo.create_layout(self.ctx)
-        pango_layout.set_markup(text, -1)
-        pango_layout.set_font_description(font)
-        if w is not None:
-            pango_layout.set_wrap(Pango.WrapMode.WORD_CHAR)
-            pango_layout.set_width(int(w * Pango.SCALE))
-        return pango_layout.get_pixel_size()
+        with self.renderer.translate(x, y):
+            with self.renderer.scale(w/width, h/height):
+                self.renderer.paint_image()
 
     def draw_text(self,
                   id: str=None,
                   x: float=0,
                   y: float=0,
-                  w: float=100,  # TODO: These seem... arbitrary.
-                  h: float=100,  # TODO: These seem... arbitrary.
-                  text: str="undefined",
+                  w: float=-1.0,  # By default, DON'T restrict w/h
+                  h: float=-1.0,
+                  text: str="",
                   color: Color=BLACK,
                   font_name: str="Ubuntu",
                   font_size: int=16,
                   align: str="left",
                   line_spacing: int=0,
+                  justify: bool=False,
                   debug: bool=False,
                   ):
-        pass
-        text = text.replace("\\n", "\n")
-        # make the font
-        font = Pango.FontDescription("{} {}".format(font_name, font_size))
-
-        # Convert to Pango units
-        width = int(w * Pango.SCALE)
-        height = int(h * Pango.SCALE)
-
-        # Generate the text
-        pango_layout = PangoCairo.create_layout(self.ctx)
-        pango_layout.set_markup(text, -1)
-        pango_layout.set_spacing(line_spacing * Pango.SCALE)
-        pango_layout.set_alignment({
-            "left": Pango.Alignment.LEFT,
-            "center": Pango.Alignment.CENTER,
-            "right": Pango.Alignment.RIGHT,
-        }[align])  # TODO: Warnings for improper grammar
-        pango_layout.set_font_description(font)
-        # pango_layout.set_justify(True)
-        pango_layout.set_wrap(Pango.WrapMode.WORD_CHAR)
-        pango_layout.set_width(width)
-
-        # Ellipsize if there's too much content
-        text_width, text_height = pango_layout.get_pixel_size()
-        if text_height > h:
-            pango_layout.set_ellipsize(Pango.EllipsizeMode.END)
-            pango_layout.set_height(height)
-            # text_width, text_height = pango_layout.get_pixel_size()
-
-        # draw a debug box
+        """Draw the configured text widget on the canvas.
+        """
+        # First, draw a debug box (if requested)
         if debug:
             self.draw_rect(x=x, y=y, w=w, h=h, color=Color(0.0, 1.0, 1.0, 1.0),
-                           stroke=True)
+                           stroke=True, fill=False)
 
-        # draw the text
-        self.ctx.set_source_rgba(*color)
-        self.ctx.move_to(x, y)
-        PangoCairo.show_layout(self.ctx, pango_layout)
+        # Process the inputs
+        text = text.replace("\\n", "\n")
+        alignment = {
+            "left": TextAlignment.Left,
+            "center": TextAlignment.Center,
+            "right": TextAlignment.Right,
+        }[align]  # TODO: Validate on the parser
+
+        # Configure the text
+        self.renderer.set_font(font_name, font_size)
+        self.renderer.configure_text_layout(
+            width=w, height=h,
+            line_spacing=line_spacing,
+            alignment=alignment,
+            justify=justify,
+        )
+        self.renderer.set_color(*color)
+        self.renderer.set_text(text)
+
+        # Draw the text
+        with self.renderer.translate(x, y):
+            self.renderer.paint_text()
 
     def draw_table(self,
                    id: str=None,
@@ -177,19 +116,23 @@ class RenderInstance:
                    font_name: str="Ubuntu",
                    font_size: int=16,
                    ):
+        # Load the data
         if not data:
             return
-
         data = json.loads(data)
-
         # TODO: Assert the table data is rectangular
 
-        # First pass to generate the values
-        font = Pango.FontDescription("{} {}".format(font_name, font_size))
+        # Set the font
+        self.renderer.set_font(font_name, font_size)
+
+        # First pass to generate the column widths
         widths = [0] * len(data[0])
         for row in data:
-            for i, value in enumerate(row):
-                this_w, _ = self._get_text_size(value, font)
+            for i, text in enumerate(row):
+                text = text.replace("\\n", "\n")
+                self.renderer.set_text(text)
+                self.renderer.configure_text_layout(width=w, height=1000)
+                this_w, _ = self.renderer.get_text_size()
                 this_w += padding_x * 2
                 widths[i] = max(this_w, widths[i])
 
@@ -203,27 +146,29 @@ class RenderInstance:
 
             # calculate the height of this row
             height = 0
-            for j, value in enumerate(row):
-                _, h = self._get_text_size(value, font, w=widths[j])
+            for j, text in enumerate(row):
+                self.renderer.set_text(text)
+                self.renderer.configure_text_layout(width=widths[j], height=1000)
+                _, h = self.renderer.get_text_size()
                 height = max(height, h)
             height += padding_y * 2
 
-            for j, value in enumerate(row):
+            for j, text in enumerate(row):
                 # render the table cell
                 self.draw_rect(x=x + cursor_x, y=y + cursor_y, w=widths[j],
-                               h=height, stroke=True, color=border_color)
+                               h=height, stroke=True, fill=False,
+                               color=border_color)
                 # then render the text inside it
-                self.draw_text(text=value,
+                self.draw_text(text=text,
                                x=x + cursor_x + padding_x,
                                y=y + cursor_y + padding_y,
                                w=widths[j], h=height, color=color,
                                font_name=font_name, font_size=font_size)
                 cursor_x += widths[j]
-
             cursor_y += height
 
     def save(self):
-        self.surface.write_to_png(self.filename)
+        self.renderer.save(self.filename)
 
 
 def render_string(layout, w, h, filename):

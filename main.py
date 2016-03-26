@@ -29,6 +29,13 @@ def main():
     card_data = [dict(zip(keys, line)) for line in wks[1:]]
     card_data = [c for c in card_data if any(c.values())]  # Remove empty lines
 
+    # Do some profiling
+    # import cProfile
+    # import pstats
+    # from io import StringIO
+    # pr = cProfile.Profile()
+    # pr.enable()
+
     print("Rendering card data...")
     # Do some context processing
     for i, card in enumerate(card_data):
@@ -87,6 +94,12 @@ def main():
 
     # TODO: Hand and showcase renders
 
+    # Show profiling results
+    # pr.disable()
+    # s = StringIO()
+    # ps = pstats.Stats(pr, stream=s).sort_stats('tottime')
+    # ps.print_stats()
+    # print(s.getvalue())
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,13 @@
+# Progress indicator
 tqdm
-jinja2
+
+# Google Docs Integration
 gspread
 oauth2client
 pyopenssl
-pgi
+
+# Template Engine
+jinja2
+
+# DSL Parser
 pyparsing

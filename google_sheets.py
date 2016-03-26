@@ -2,6 +2,7 @@ import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+
 def get_worksheet_data(name):
     with open('credentials.json') as infile:
         data = json.load(infile)

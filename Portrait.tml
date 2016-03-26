@@ -195,6 +195,7 @@ Text {
 #    radius: 16
 #    color: 1, 0, 0, 1
 #    stroke: true
+#    fill: false
 #}
 
 # The "safe zone" as defined by TheGameCrafter poker cards
@@ -206,4 +207,5 @@ Text {
 #    h: 975
 #    color: 1, 1, 0, 1
 #    stroke: true
+#    fill: false
 #}
