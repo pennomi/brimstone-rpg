@@ -27,7 +27,6 @@ def _load_image(file: str=None) -> (object, int, int):
     return buffer, width, height
 
 
-# TODO: Verify these are the correct numbers
 class TextAlignment(IntEnum):
     Left = 0
     Center = 1
@@ -121,7 +120,7 @@ class CairoRenderer:
         finally:
             PC.cairo_scale(self.context, c_double(1/x), c_double(1/y))
 
-    # TODO: Parse several types of rgba: 0-255, 0.0-1.0, #FFFFFF
+    # TODO: Parse several types of colors: 0-255, 0.0-1.0, #FFFFFF, 'black'
     # http://stackoverflow.com/questions/4296249/how-do-i-convert-a-hex-triplet-to-an-rgb-tuple-and-back
     def set_color(self, r: float, g: float, b: float, a: float):
         PC.cairo_set_source_rgba(
@@ -178,36 +177,3 @@ class CairoRenderer:
         PC.g_object_unref(self.layout)
         PC.cairo_surface_destroy(self.surface)
         PC.cairo_destroy(self.context)
-
-
-# Run some tests
-renderer = CairoRenderer(100, 100)
-
-# Rectangle
-renderer.set_color(1.0, 0.0, 0.0, 1.0)
-renderer.plot_rectangle(30, 30, 30, 30, 3)
-renderer.fill()
-renderer.set_color(0.0, 0.0, 1.0, 1.0)
-renderer.plot_rectangle(30, 30, 30, 30, 3)
-renderer.stroke()
-
-# Text
-renderer.set_font("UbuntuMono Bold", 30)
-renderer.set_color(0.0, 0.0, 0.0, 1.0)
-renderer.configure_text_layout(
-    alignment=TextAlignment.Center,
-    width=100,
-    wrap_mode=WrapMode.Char,
-)
-with renderer.translate(50, 50):
-    with renderer.scale(0.5, 0.5):
-        renderer.set_text("C ☺ ☺ L")
-        renderer.paint_text()
-renderer.set_text("CALE")
-renderer.paint_text()
-renderer.save("out.png")
-
-# Image
-
-
-print("Success")

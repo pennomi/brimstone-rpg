@@ -168,8 +168,6 @@ Text {
     color: 1, 1, 1, .25
 }
 
-# TODO: Set icon
-
 # Version Number
 Text {
     text: {{ card.set }} {{ card.id }} : {{ card.version }}

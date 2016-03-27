@@ -18,6 +18,9 @@ def _scale_column_widths(columns, total_width):
     return columns
 
 
+MAX_TABLE_LINES = 100  # Since we set ellipsize, we need a max number of lines
+
+
 class RenderInstance:
     def __init__(self, filename, width, height):
         self.filename = filename
@@ -47,7 +50,6 @@ class RenderInstance:
                    w: float=100,
                    h: float=100,
                    file: str="") -> None:
-        # TODO: Check the transforms
         try:
             width, height = self.renderer.set_image_buffer(file)
         except FileNotFoundError:
@@ -108,7 +110,6 @@ class RenderInstance:
                    x: float=0,
                    y: float=0,
                    w: float=100,
-                   # h: float=100,  # TODO: Is this even a thing?
                    padding_x: int=2,
                    padding_y: int=2,
                    color: Color=BLACK,
@@ -131,7 +132,8 @@ class RenderInstance:
             for i, text in enumerate(row):
                 text = text.replace("\\n", "\n")
                 self.renderer.set_text(text)
-                self.renderer.configure_text_layout(width=w, height=1000)
+                self.renderer.configure_text_layout(
+                    width=w, height=-MAX_TABLE_LINES)
                 this_w, _ = self.renderer.get_text_size()
                 this_w += padding_x * 2
                 widths[i] = max(this_w, widths[i])
@@ -148,7 +150,8 @@ class RenderInstance:
             height = 0
             for j, text in enumerate(row):
                 self.renderer.set_text(text)
-                self.renderer.configure_text_layout(width=widths[j], height=1000)
+                self.renderer.configure_text_layout(
+                    width=widths[j], height=-MAX_TABLE_LINES)
                 _, h = self.renderer.get_text_size()
                 height = max(height, h)
             height += padding_y * 2
