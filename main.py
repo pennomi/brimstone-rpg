@@ -24,7 +24,7 @@ def replace_markup(card, key):
 
 def main():
     # Load the data from Google Sheets
-    wks = get_worksheet_data("Brimstone RPG Powers")
+    wks = get_worksheet_data("Brimstone Playtest v0.2.0")
     keys = wks[0]
     card_data = [dict(zip(keys, line)) for line in wks[1:]]
     card_data = [c for c in card_data if any(c.values())]  # Remove empty lines

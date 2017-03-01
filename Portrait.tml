@@ -3,20 +3,20 @@
     Image {
         id: art
         file: {{ card.image }}
-        x: 72
-        y: 149
-        w: 753
-        h: 412
+        x: 0
+        y: 136
+        w: 825
+        h: 435
     }
     Text {
         id: artist_shadow
         text: {{ card.artist }}
         x: 247
-        y: 535
+        y: 523
         w: 500
         h: 26
         align: right
-        color: 0.0, 0.0, 0.0, 1
+        color: 0.1, 0.1, 0.1, 1
         font_name: DroidSerif weight=900 Italic
         font_size: 14
     }
@@ -24,7 +24,7 @@
         id: artist
         text: {{ card.artist }}
         x: 246
-        y: 534
+        y: 522
         w: 500
         h: 26
         align: right
@@ -47,58 +47,46 @@ Image {
 {% for stat in card.stats %}
     {% set stat_top = 207 %}
     {% set stat_spacing = 30 %}
-    {% set stat_height = 68 %}
+    {% set stat_height = 91 %}
 
-    {% set stat_icon_size = 37 %}
-    {% set stat_icon_padding = 4 %}
+    {% set stat_icon_size = 24 %}
 
-    {% set stat_font_offset = 30 %}
-
-    Rect {
-        color: .13, .13, .13, 1
+    Image {
+        file: images/frames/statbox.svg
         x: 0
         y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) }}
-        w: 150
+        w: 160
         h: {{ stat_height }}
-    }
-
-    Text {
-        text: {{ stat.text }}
-        x: 75
-        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + stat_font_offset}}
-        w: 263
-        h: {{ stat_height }}
-        color: 1.0, 1.0, 1.0, 1
-        font_name: DroidSans Bold
-        font_size: 22
-    }
-
-    Rect {
-        color: .13, .13, .13, 1
-        x: 75
-        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) - stat_icon_size / 2}}
-        w: {{ stat_icon_size }}
-        h: {{ stat_icon_size }}
-        radius: {{ stat_icon_size / 2 }}
     }
 
     Image {
         file: {{ stat.icon }}
-        x: {{ 75 + stat_icon_padding }}
-        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + stat_icon_padding - stat_icon_size / 2 }}
-        w: {{ stat_icon_size - stat_icon_padding * 2 }}
-        h: {{ stat_icon_size - stat_icon_padding * 2 }}
+        x: 86
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + 6 }}
+        w: {{ stat_icon_size }}
+        h: {{ stat_icon_size }}
     }
 
     Text {
         text: {{ stat.name }}
         x: 75
-        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + stat_icon_size / 2 - stat_icon_padding}}
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + 35 }}
         w: 263
         h: {{ stat_height }}
         color: 1.0, 1.0, 1.0, 1
-        font_name: DroidSans
+        font_name: DroidSans Bold
         font_size: 10
+    }
+
+    Text {
+        text: {{ stat.text }}
+        x: 75
+        y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + 50 }}
+        w: 263
+        h: {{ stat_height }}
+        color: 1.0, 1.0, 1.0, 1
+        font_name: DroidSans Bold
+        font_size: 22
     }
 {% endfor %}
 
@@ -107,7 +95,7 @@ Text {
     id: title
     text: {{ card.title }}
     x: 0
-    y: 68
+    y: 66
     w: 825
     h: 50
     align: center
@@ -120,15 +108,16 @@ Text {
     id: subtitle
     text: {{ card.subtitle }}
     x: 0
-    y: 134
+    y: 126
     w: 825
     h: 30
     align: center
-    font_name: DroidSerif weight=900 Italic
+    font_name: DroidSerif Bold
     font_size: 22
-    color: 1.0, 1.0, 1.0, 1
+    color: 0.1, 0.1, 0.1, 0.5
 }
 
+# TODO: if no side icons, expand the width on this and the table.
 Text {
     text: {{ card.description }}
     x: 169
@@ -138,6 +127,7 @@ Text {
     line_spacing: 2
     font_name: DroidSerif
     font_size: 22
+    color: 0.1, 0.1, 0.1, 1.0
 }
 
 # Show a table if needed TODO: anchor to description bottom automatically
@@ -152,49 +142,38 @@ Text {
         padding_y: 3
         font_name: DroidSerif
         font_size: 22
+        color: 0.1, 0.1, 0.1, 1.0
     }
 {% endif %}
 
 
-# Copyright text
+# Copyright text & Version Number
 Text {
-    text: © {{ card.creation_year }}–2016, Brimstone RPG Project
-    x: 341
-    y: 1047
-    w: 800
+    text: © {{ card.creation_year }}–2017, Brimstone RPG Project     {{ card.set }} {{ card.id }} : {{ card.version }}
+    x: 0
+    y: 1027
+    w: 825
     h: 52
-    font_name: DroidSerif Italic
-    font_size: 13
-    color: 1, 1, 1, .25
-}
-
-# Version Number
-Text {
-    text: {{ card.set }} {{ card.id }} : {{ card.version }}
-    x: 370
-    y: 1012
-    w: 263
-    h: 32
-    align: right
+    align: center
     font_name: DroidSerif weight=900 Italic
-    font_size: 18
-    color: 1, 1, 1, .25
+    font_size: 14
+    color: 0.1, 0.1, 0.1, 0.5
 }
 
 # Debug Drawing
 
 # The "cut line"
-#Rect {
-#    id: cut
-#    x: 37.5
-#    y: 37.5
-#    w: 750
-#    h: 1050
-#    radius: 16
-#    color: 1, 0, 0, 1
-#    stroke: true
-#    fill: false
-#}
+Rect {
+    id: cut
+    x: 37.5
+    y: 37.5
+    w: 750
+    h: 1050
+    radius: 16
+    color: 1, 0, 0, 1
+    stroke: true
+    fill: false
+}
 
 # The "safe zone" as defined by TheGameCrafter poker cards
 #Rect {

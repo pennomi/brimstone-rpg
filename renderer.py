@@ -115,7 +115,6 @@ class CairoRenderer:
     def scale(self, x: float, y: float):
         PC.cairo_scale(self.context, c_double(x), c_double(y))
         try:
-            # print("scale")
             yield
         finally:
             PC.cairo_scale(self.context, c_double(1/x), c_double(1/y))
