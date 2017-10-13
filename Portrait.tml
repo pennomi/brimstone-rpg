@@ -69,24 +69,26 @@ Image {
 
     Text {
         text: {{ stat.name }}
-        x: 75
+        x: 37.5
         y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + 35 }}
-        w: 263
+        w: 120
         h: {{ stat_height }}
         color: 1.0, 1.0, 1.0, 1
         font_name: DroidSans Bold
         font_size: 10
+        align: center
     }
 
     Text {
         text: {{ stat.text }}
-        x: 75
+        x: 37.5
         y: {{ stat_top + loop.index0 * (stat_height + stat_spacing) + 50 }}
-        w: 263
+        w: 120
         h: {{ stat_height }}
         color: 1.0, 1.0, 1.0, 1
         font_name: DroidSans Bold
         font_size: 22
+        align: center
     }
 {% endfor %}
 

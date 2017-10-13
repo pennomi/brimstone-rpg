@@ -1,5 +1,6 @@
 _output/*.png
 _output/*.pdf
+aggregated.pdf
 ~$*
 .DS_Store
 .idea/
